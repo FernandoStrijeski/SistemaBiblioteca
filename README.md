@@ -5,9 +5,7 @@
  ![GitHub Org's stars](https://img.shields.io/github/stars/FernandoStrijeskiLinx?style=social)
 
 Trata-se de uma aplicação Dotnet desenvolvida com o objetivo de gerenciar o armazenamento das informações referentes a livros e autores.
-<p align="center">
-  <img src="https://github.com/FernandoStrijeskiLinx/M01_LABMedicine/blob/main/logo_bk1.png" alt="SisBib Logo"/>  
-</p>
+
 
 # 📄**Documentação da API**
 Para um melhor entendimento das funcionalidades existentes na API, utilizamos a interface do swagger.<br>
