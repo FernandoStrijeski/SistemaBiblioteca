@@ -54,8 +54,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 #endregion
 
-
-
 #region Injeção de Dependência
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -110,7 +108,6 @@ builder.Services.AddLogging(loggingBuilder =>
     loggingBuilder.AddSerilog(); // Adicionar o logger do Serilog
 });
 #endregion
-
 
 #region App
 var app = builder.Build();

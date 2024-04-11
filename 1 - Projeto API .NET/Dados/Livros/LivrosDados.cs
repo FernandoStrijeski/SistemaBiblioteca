@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dados.Autores;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ORM;
 using ORM.Response;
 
@@ -8,10 +10,12 @@ namespace Dados.Livros
     {
         #region Parametros e Construtor
         private AppDbContext _contexto;
+        private readonly ILogger<LivrosDados> _logger;
 
-        public LivrosDados(AppDbContext contexto)
+        public LivrosDados(AppDbContext contexto, ILogger<LivrosDados> logger)
         {
-            _contexto = contexto;         
+            _contexto = contexto;
+            _logger = logger;
         }
         #endregion
 
@@ -25,8 +29,18 @@ namespace Dados.Livros
         #region Inclusão de Livros
         public void AddLivro(Livro livroInputModel)
         {
-            _contexto.Livros.Add(livroInputModel);
-            _contexto.SaveChanges();
+            try
+            {
+                _contexto.Livros.Add(livroInputModel);
+                _logger.LogTrace("Vai adicionar um livro no banco.");
+                _contexto.SaveChanges();
+                _logger.LogTrace("Adicionado o livro com sucesso no banco.");
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError($"Erro ao adicionar o livro: {ex.Message}");
+                throw new Exception("Erro ao adicionar livro", ex);
+            }           
         }
 
         public void AddLivros(IEnumerable<Livro> livrosInputModel)
@@ -48,6 +62,7 @@ namespace Dados.Livros
             }
             else
             {
+                _logger.LogError("Livro não encontrado para o id informado.");
                 throw new Exception();
             }
         }
@@ -65,6 +80,7 @@ namespace Dados.Livros
             }
             else
             {
+                _logger.LogError("Livro não encontrado para o id informado.");
                 throw new Exception();
             }
         }

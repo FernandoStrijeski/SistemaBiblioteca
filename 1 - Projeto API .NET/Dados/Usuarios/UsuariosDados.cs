@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ORM;
 using ORM.Response;
 
@@ -8,10 +9,12 @@ namespace Dados.Usuarios
     {
         #region Parametros e Construtor
         private AppDbContext _contexto;
+        private readonly ILogger<UsuariosDados> _logger;
 
-        public UsuariosDados(AppDbContext contexto)
+        public UsuariosDados(AppDbContext contexto, ILogger<UsuariosDados> logger)
         {
             _contexto = contexto;
+            _logger = logger;
         }
         #endregion
 
@@ -25,8 +28,19 @@ namespace Dados.Usuarios
         #region Inclusão de Usuários
         public void AddUsuario(Usuario usuario)
         {
-            _contexto.Usuarios.Add(usuario);
-            _contexto.SaveChangesAsync();
+         
+            try
+            {
+                _contexto.Usuarios.Add(usuario);
+                _logger.LogTrace("Vai adicionar um usuário no banco.");                
+                _contexto.SaveChanges();
+                _logger.LogTrace("Adicionado o usuário com sucesso no banco.");
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError($"Erro ao adicionar o usuário: {ex.Message}");
+                throw new Exception("Erro ao adicionar usuário", ex);
+            }
         }
 
         public void AddUsuarios(IEnumerable<Usuario> usuarios)
@@ -48,6 +62,7 @@ namespace Dados.Usuarios
             }
             else
             {
+                _logger.LogError("Usuário não encontrado para o id informado.");
                 throw new Exception();
             }
         }
@@ -65,6 +80,7 @@ namespace Dados.Usuarios
             }
             else
             {
+                _logger.LogError("Usuário não encontrado para o id informado.");
                 throw new Exception();
             }
         }

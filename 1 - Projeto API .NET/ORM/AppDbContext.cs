@@ -38,8 +38,6 @@ namespace ORM
          
             modelBuilder.Entity<Autor>()
                 .HasKey(a => a.idAutor);
-
-
         }
     }
 }

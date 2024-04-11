@@ -29,7 +29,6 @@ namespace API.Controllers
             var livros = await _livrosService.GetLivros();
 
             _logger.LogInformation("Obtenção de dados bem-sucedida.");
-
             return livros;
         }
 
@@ -39,7 +38,6 @@ namespace API.Controllers
             var livros = await _livrosService.GetLivrosPorTitulo(titulo);
             
             _logger.LogInformation("Operação bem-sucedida.");
-
             return livros;
         }
         
@@ -49,7 +47,6 @@ namespace API.Controllers
             var livros = await _livrosService.GetLivrosPorTituloLikeORderByAnoPublicacao(titulo);
 
             _logger.LogInformation("Obtenção de dados bem-sucedida.");
-
             return livros;
         }
 
@@ -62,13 +59,11 @@ namespace API.Controllers
             if (livro == null)
             {
                 _logger.LogInformation("GetLivro - Livro não encontrado para o id informado.");
-
                 return NotFound();
             }
             else
             {
                 _logger.LogInformation("GetLivro - Obtenção de dados bem-sucedida.");
-
                 return livro;
             }
         }
@@ -79,36 +74,30 @@ namespace API.Controllers
         public ActionResult<Livro> PostLivro(Livro livro)
         {            
             _livrosService.AddLivro(livro);
-
             _logger.LogInformation("PostLivro - Operação bem-sucedida.");
-
             return CreatedAtAction("GetLivro", new { id = livro.idLivro }, livro);
-
         }
         #endregion
 
         #region Edição de Livro
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLivro(int id, Livro livro)
+        public async Task<IActionResult> PutLivro(int id, Livro? livro)
         {
             if (livro == null)
             {
                 _logger.LogError("PutLivro - O livro não pode ser nulo.");
-
                 throw new ArgumentNullException("O livro não pode ser nulo");
             }
 
             if (id != livro.idLivro)
             {
                 _logger.LogInformation("PutLivro - O ID do livro não corresponde ao ID na URL.");
-
                 return BadRequest("O ID do livro não corresponde ao ID na URL");
             }
 
             try
             {
                 _livrosService.EditLivro(livro);
-
                 _logger.LogInformation("PutLivro - Operação bem-sucedida.");
 
             }
@@ -119,13 +108,11 @@ namespace API.Controllers
                 if (existeLivro == null)
                 {
                     _logger.LogInformation("PutLivro - Livro não encontrado para o id informado.");
-
                     return NotFound();
                 }
                 else
                 {
                     _logger.LogError($"Ocorreu um erro: {ex.Message} - {ex.StackTrace}");
-
                     throw;
                 }
             }
@@ -149,9 +136,7 @@ namespace API.Controllers
             }
 
             _livrosService.DeleteLivro(livro);
-
             _logger.LogInformation("Operação bem-sucedida.");
-
             return NoContent();
         }
         #endregion

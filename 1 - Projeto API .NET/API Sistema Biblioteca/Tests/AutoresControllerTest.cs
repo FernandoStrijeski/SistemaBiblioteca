@@ -8,18 +8,20 @@ using NUnit.Framework.Legacy;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
 using ORM.Response;
+using Dados.Autores;
+using Servicos.Autores;
 
 
 namespace API.Tests
 {
     [TestFixture]
-    public class UsuariosControllerTests
+    public class AutoresControllerTests
     {
-        private UsuariosController? _controller;
-        private ILogger<UsuariosController>? _logger;
-        private ILogger<UsuariosDados>? _loggerDados;
-        private UsuariosService? _usuariosService;
-        private UsuariosDados? _usuariosDados;
+        private AutoresController? _controller;
+        private ILogger<AutoresController>? _logger;
+        private ILogger<AutoresDados>? _loggerDados;
+        private AutoresService? _autoresService;
+        private AutoresDados? _autoresDados;
 
         [SetUp]
         public void Setup()
@@ -38,11 +40,11 @@ namespace API.Tests
             var context = serviceProvider.GetRequiredService<AppDbContext>();
             #endregion
 
-            _loggerDados = new Mock<ILogger<UsuariosDados>>().Object;
-            _usuariosDados = new UsuariosDados(context, _loggerDados);
-            _usuariosService = new UsuariosService(_usuariosDados);
-            _logger = new Mock<ILogger<UsuariosController>>().Object;
-            _controller = new UsuariosController(_logger, context, _usuariosService);
+            _loggerDados = new Mock<ILogger<AutoresDados>>().Object;
+            _autoresDados = new AutoresDados(context, _loggerDados);
+            _autoresService = new AutoresService(_autoresDados);
+            _logger = new Mock<ILogger<AutoresController>>().Object;
+            _controller = new AutoresController(_logger, context, _autoresService);
         }
 
         [TearDown]
@@ -51,54 +53,54 @@ namespace API.Tests
             _controller = null;
             _logger = null;
             _loggerDados = null;
-            _usuariosService = null;
-            _usuariosDados = null;
+            _autoresService = null;
+            _autoresDados = null;
         }
 
         [Test]
-        [Description("Verifica se a lista de usuários é retornada corretamente.")]
-        public async Task GetUsuarios_ReturnsListOfUsers()
+        [Description("Verifica se a lista de autores é retornada corretamente.")]
+        public async Task GetAutores_ReturnsListOfAuthors()
         {
             if (_controller != null)
             {
                 // Act
-                var result = await _controller.GetUsuarios();
+                var result = await _controller.GetAutores();
 
                 // Assert
                 ClassicAssert.IsNotNull(result);
-                ClassicAssert.IsInstanceOf<List<Usuario>>(result);
+                ClassicAssert.IsInstanceOf<List<Autor>>(result);
             }
         }
 
         [Test]
-        [Description("Verifica se a lista de usuários por nome é retornada corretamente.")]
-        [TestCase("Teste", TestName = "GetUsuariosPorNome_ReturnsListOfUsersWithValidName")]
-        [TestCase("", TestName = "GetUsuariosPorNome_ReturnsListOfUsersWithEmptyName")]
-        [TestCase(null, TestName = "GetUsuariosPorNome_ReturnsListOfUsersWithNullName")]
-        public async Task GetUsuariosPorNome_ReturnsListOfUsers(string nome)
+        [Description("Verifica se a lista de autores por nome é retornada corretamente.")]
+        [TestCase("Teste", TestName = "GetAutoresPorNome_ReturnsListOfAuthorsWithValidName")]
+        [TestCase("", TestName = "GetAutoresPorNome_ReturnsListOfAuthorsWithEmptyName")]
+        [TestCase(null, TestName = "GetAutoresPorNome_ReturnsListOfAuthorsWithNullName")]
+        public async Task GetAutoresPorNome_ReturnsListOfAuthors(string nome)
         {
             if (_controller != null)
             {
                 // Act
-                var result = await _controller.GetUsuariosPorNome(nome);
+                var result = await _controller.GetAutoresPorNome(nome);
 
                 // Assert
                 ClassicAssert.IsNotNull(result);
-                ClassicAssert.IsInstanceOf<List<Usuario>>(result);
+                ClassicAssert.IsInstanceOf<List<Autor>>(result);
             }
         }
 
         [Test]
-        [Description("Verifica se um BadRequest é retornado ao tentar editar um usuário diferente do id da URL.")]
-        public async Task EditUsuario_ReturnsBadRequestForDiffId()
+        [Description("Verifica se um BadRequest é retornado ao tentar editar um autor diferente do id da URL.")]
+        public async Task PutAutor_ReturnsBadRequestForDiffId()
         {
             if (_controller != null)
             {
                 // Arrange
-                Usuario? usuarioNulo = new Usuario() { userId = 2 };
+                Autor? autorNulo = new Autor() { idAutor = 2 };
 
                 // Act
-                var result = await _controller.PutUsuario(1, usuarioNulo);
+                var result = await _controller.PutAutor(1, autorNulo);
 
                 // Assert
                 ClassicAssert.IsNotNull(result);
@@ -107,19 +109,19 @@ namespace API.Tests
         }
 
         [Test]
-        [Description("Verifica se uma Exception é retornado ao tentar editar um usuário nulo.")]
-        public async Task EditUsuario_ThrowsExceptionForNullUser()
+        [Description("Verifica se uma Exception é retornado ao tentar editar um autor nulo.")]
+        public async Task PutAutor_ThrowsExceptionForNullUser()
         {
             if (_controller != null)
             {
                 // Arrange
-                Usuario? usuarioNulo = null;
+                Autor? autorNulo = null;
 
                 // Act
                 Exception? exception = null;
                 try
                 {
-                    await _controller.PutUsuario(1, usuarioNulo);
+                    await _controller.PutAutor(1, autorNulo);
                 }
                 catch (Exception ex)
                 {

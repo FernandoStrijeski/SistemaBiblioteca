@@ -88,7 +88,7 @@ namespace API.Controllers
 
         #region Edição de Autores
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAutor(int id, Autor autor)
+        public async Task<IActionResult> PutAutor(int id, Autor? autor)
         {
             if (autor == null)
             {

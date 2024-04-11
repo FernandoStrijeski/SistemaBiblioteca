@@ -67,6 +67,5 @@ namespace Servicos.Autores
             _autorDAO.DeleteAutor(autor);
         }
         #endregion
-
     }
 }
