@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ORM;
 using ORM.Response;
 
@@ -8,10 +9,12 @@ namespace Dados.Autores
     {
         #region Parametros e Construtor
         private AppDbContext _contexto;
+        private readonly ILogger<AutoresDados> _logger;
 
-        public AutoresDados(AppDbContext contexto)
+        public AutoresDados(AppDbContext contexto, ILogger<AutoresDados> logger)
         {
             _contexto = contexto;
+            _logger = logger;
         }
         #endregion
 
@@ -25,8 +28,18 @@ namespace Dados.Autores
         #region Inclusão de Autores
         public void AddAutor(Autor autorInputModel)
         {
-            _contexto.Autores.Add(autorInputModel);
-            _contexto.SaveChanges();
+            try
+            {
+                _contexto.Autores.Add(autorInputModel);
+                _logger.LogTrace("Vai adicionar um autor no banco.");
+                _contexto.SaveChanges();
+                _logger.LogTrace("Adicionado o autor com sucesso no banco.");
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError($"Erro ao adicionar o autor: {ex.Message}");                
+                throw new Exception("Erro ao adicionar autor", ex);
+            }            
         }
 
         public void AddAutores(IEnumerable<Autor> autoresInputModel)
@@ -48,6 +61,7 @@ namespace Dados.Autores
             }
             else
             {
+                _logger.LogError("Autor não encontrado para o id informado.");
                 throw new Exception();
             }
         }
@@ -65,6 +79,7 @@ namespace Dados.Autores
             }
             else
             {
+                _logger.LogError("Autor não encontrado para o id informado.");
                 throw new Exception();
             }
         }

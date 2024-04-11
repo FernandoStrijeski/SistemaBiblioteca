@@ -28,7 +28,7 @@ namespace API.Controllers
         {
             var autores = await _autoresService.GetAutores();
 
-            _logger.LogInformation("Obtenção de dados bem-sucedida.");
+            _logger.LogInformation("GetAutores - Obtenção de dados bem-sucedida.");
 
             return autores;
         }
@@ -38,6 +38,8 @@ namespace API.Controllers
         {
             var autores = await _autoresService.GetAutoresPorNome(nome);
 
+            _logger.LogInformation("GetAutoresPorNome - Obtenção de dados bem-sucedida.");
+
             return autores;
         }
         
@@ -45,6 +47,8 @@ namespace API.Controllers
         public async Task<IEnumerable<Autor>> GetAutoresPorNomeLike(string nome)
         {
             var autores = await _autoresService.GetAutoresPorNomeLike(nome);
+
+            _logger.LogInformation("GetAutoresPorNomeLike - Obtenção de dados bem-sucedida.");
 
             return autores;
         }
@@ -57,10 +61,14 @@ namespace API.Controllers
 
             if (autor == null)
             {
+                _logger.LogInformation("GetAutor - Autor não encontrado para o id informado.");
+
                 return NotFound();
             }
             else
             {
+                _logger.LogInformation("GetAutor - Obtenção de dados bem-sucedida.");
+
                 return autor;
             }
         }
@@ -72,6 +80,8 @@ namespace API.Controllers
         {
             _autoresService.AddAutor(autor);
 
+            _logger.LogInformation("PostAutor - Operação bem-sucedida.");
+
             return CreatedAtAction("GetAutor", new { id = autor.idAutor }, autor);
         }
         #endregion
@@ -82,11 +92,14 @@ namespace API.Controllers
         {
             if (autor == null)
             {
+                _logger.LogInformation("PutAutor - O autor não pode ser nulo.");
+
                 throw new ArgumentNullException("O autor não pode ser nulo");
             }
 
             if (id != autor.idAutor)
             {
+                _logger.LogError("PutAutor - O ID do autor não corresponde ao ID na URL");
                 return BadRequest("O ID do autor não corresponde ao ID na URL");
             }
 
@@ -94,20 +107,24 @@ namespace API.Controllers
             {
                 _autoresService.EditAutor(autor);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 var existeAutor = await _autoresService.GetAutorPorId(id);
 
                 if (existeAutor == null)
                 {
+                    _logger.LogInformation("PutAutor - Autor não encontrado para o id informado.");
+
                     return NotFound();
                 }
                 else
                 {
+                    _logger.LogError($"Ocorreu um erro: {ex.Message} - {ex.StackTrace}");
                     throw;
                 }
             }
 
+            _logger.LogInformation("PutAutor - Operação bem-sucedida.");
             return NoContent();
         }
         #endregion
@@ -121,10 +138,13 @@ namespace API.Controllers
 
             if (autor == null)
             {
+                _logger.LogInformation("Autor não encontrado para o id informado.");
                 return NotFound();
             }
 
             _autoresService.DeleteAutor(autor);
+
+            _logger.LogInformation("Operação 'DeleteAutor' bem-sucedida.");
 
             return NoContent();
         }
