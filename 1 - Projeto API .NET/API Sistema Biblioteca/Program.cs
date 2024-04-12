@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ORM;
+using ORM.ValidacoesPersonalizadas;
 using Serilog;
 using Servicos.Autores;
 using Servicos.Livros;
@@ -19,7 +20,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(options =>
- options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+{    
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddEndpointsApiExplorer();
 #endregion
