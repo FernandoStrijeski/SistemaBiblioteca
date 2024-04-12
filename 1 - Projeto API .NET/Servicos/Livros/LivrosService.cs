@@ -46,6 +46,11 @@ namespace Servicos.Livros
         {
             return await _livroDAO.GetLivros().FindAsync(id);
         }
+
+        public async Task<IEnumerable<Livro>> GetLivrosPorAutorId(int id)
+        {
+            return await _livroDAO.GetLivros().Where(l => l.idAutor == id).ToListAsync();
+        }
         #endregion
 
         #region Inclusão de Livros

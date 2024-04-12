@@ -21,5 +21,7 @@ namespace Servicos.Livros
         public void EditLivro(Livro Livro);
 
         public void DeleteLivro(Livro Livro);
+
+        public Task<IEnumerable<Livro>> GetLivrosPorAutorId(int id);
     }
 }

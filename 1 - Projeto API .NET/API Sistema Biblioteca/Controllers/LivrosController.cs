@@ -69,6 +69,19 @@ namespace API.Controllers
         }
         #endregion
 
+
+        #region Listagem de Livros por autor
+        [HttpGet("LivrosPorAutorId/{id}", Name = "GetLivrosPorAutorId")]
+        public async Task<IEnumerable<Livro>> GetLivrosPorAutorId(int id)
+        {
+            var livros = await _livrosService.GetLivrosPorAutorId(id);
+
+            _logger.LogInformation("Operação bem-sucedida.");
+            return livros;
+
+        }
+        #endregion
+
         #region Inclusão de Livro
         [HttpPost]
         public ActionResult<Livro> PostLivro(Livro livro)
