@@ -84,7 +84,7 @@ namespace API.Tests
 
                 // Assert
                 ClassicAssert.IsNotNull(result);
-                ClassicAssert.IsInstanceOf<List<Autor>>(result);
+                ClassicAssert.IsInstanceOf<List<Livro>>(result);
             }
         }
 
@@ -130,6 +130,25 @@ namespace API.Tests
                 // Assert
                 ClassicAssert.IsNotNull(exception);
                 ClassicAssert.IsInstanceOf<ArgumentNullException>(exception);
+            }
+        }
+
+
+        [Test]
+        [Description("Verifica se a lista de livros por autor é retornada corretamente.")]
+        [TestCase(1, TestName = "GetLivrosPorAutorId_ReturnsListOfBooksWithValidId")]
+        [TestCase(0, TestName = "GetLivrosPorAutorId_ReturnsListOfBooksWithZeroValue")]
+        [TestCase(null, TestName = "GGetLivrosPorAutorId_ReturnsListOfBooksWithNullValue")]
+        public async Task GetLivrosPorAutorId_ReturnsListOfBooks(int id)
+        {
+            if (_controller != null)
+            {
+                // Act
+                var result = await _controller.GetLivrosPorAutorId(id);
+
+                // Assert
+                ClassicAssert.IsNotNull(result);
+                ClassicAssert.IsInstanceOf<List<Livro>>(result);
             }
         }
 
